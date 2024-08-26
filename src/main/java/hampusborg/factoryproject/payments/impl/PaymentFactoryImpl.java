@@ -7,46 +7,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.MessageFormat;
+import java.util.List;
 
 @Component
 public class PaymentFactoryImpl implements PaymentFactory {
 
-    private final CreditCardPaymentService creditCardPaymentService;
-    private final ApplePayPaymentService applePayPaymentService;
-    private final GooglePayPaymentService googlePayPaymentService;
-    private final PayPalPaymentService payPalPaymentService;
-
     @Autowired
-    public PaymentFactoryImpl(CreditCardPaymentService creditCardPaymentService,
-                              ApplePayPaymentService applePayPaymentService,
-                              GooglePayPaymentService googlePayPaymentService,
-                              PayPalPaymentService payPalPaymentService) {
-        this.creditCardPaymentService = creditCardPaymentService;
-        this.applePayPaymentService = applePayPaymentService;
-        this.googlePayPaymentService = googlePayPaymentService;
-        this.payPalPaymentService = payPalPaymentService;
+    private final List<PaymentService> concretePaymentServices;
+
+    public PaymentFactoryImpl(List<PaymentService> concretePaymentServices) {
+        this.concretePaymentServices = concretePaymentServices;
     }
 
-
     public PaymentService create(PaymentMethod paymentMethod) throws ClassNotFoundException {
-        switch(paymentMethod){
+        switch (paymentMethod) {
             case CREDIT_CARD -> {
-                return creditCardPaymentService;
+                return getPayment(CreditCardPaymentService.class);
             }
             case PAYPAL -> {
-                return payPalPaymentService;
+                return getPayment(PayPalPaymentService.class);
             }
             case GOOGLE_PAY -> {
-                return googlePayPaymentService;
+                return getPayment(GooglePayPaymentService.class);
             }
-            case APPLE_PAY -> {
-                return applePayPaymentService;
-            }
-            default -> {
-                throw new ClassNotFoundException(MessageFormat.format(
-                        "${0} is not currently supported as a payment method", paymentMethod
-                ));
-            }
+            default -> throw new ClassNotFoundException(MessageFormat.format(
+                    "{0} is not currently supported as a payment method.", paymentMethod
+            ));
         }
+    }
+
+    private PaymentService getPayment(Class type) {
+        return (PaymentService) concretePaymentServices.stream()
+                .filter(type::isInstance)
+                .map(type::cast)
+                .findFirst()
+                .orElse(null);
     }
 }
