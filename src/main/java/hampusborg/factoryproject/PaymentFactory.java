@@ -14,6 +14,9 @@ public class PaymentFactory {
             case GOOGLE_PAY -> {
                 return new GooglePayPayment();
             }
+            case APPLE_PAY -> {
+                return new ApplePayPayment();
+            }
             default -> {
                 throw new ClassNotFoundException(MessageFormat.format(
                         "${0} is not currently supported as a payment method", paymentMethod

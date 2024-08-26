@@ -16,7 +16,7 @@ public class FactoryProjectApplication {
     }
 {
     try {
-        Payment payment = PaymentFactory.create(PaymentMethod.GOOGLE_PAY);
+        Payment payment = PaymentFactory.create(PaymentMethod.APPLE_PAY);
         payment.pay(new BigDecimal("1000.00"));
     } catch (ClassNotFoundException e){
         e.printStackTrace();
