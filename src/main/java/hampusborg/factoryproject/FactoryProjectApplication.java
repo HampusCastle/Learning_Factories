@@ -1,5 +1,6 @@
 package hampusborg.factoryproject;
 
+import hampusborg.factoryproject.payments.enums.PaymentMethod;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -15,11 +16,6 @@ public class FactoryProjectApplication {
         SpringApplication.run(FactoryProjectApplication.class, args);
     }
 {
-    try {
-        Payment payment = PaymentFactory.create(PaymentMethod.APPLE_PAY);
-        payment.pay(new BigDecimal("1000.00"));
-    } catch (ClassNotFoundException e){
-        e.printStackTrace();
-    }
+
 }}
 

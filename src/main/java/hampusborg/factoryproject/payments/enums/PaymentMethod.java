@@ -1,4 +1,4 @@
-package hampusborg.factoryproject;
+package hampusborg.factoryproject.payments.enums;
 
 public enum PaymentMethod {
     CREDIT_CARD,
